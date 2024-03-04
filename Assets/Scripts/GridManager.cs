@@ -28,6 +28,8 @@ public class GridManager : MonoBehaviour
         
         for (int i = 0; i < grids.Count; i++)
         {
+            grids[i].gameObject.SetActive(true);
+            grids[i].transform.position = Vector3.zero;
             grids[i].Init();
             int gridMinX = grids[i].BottomLeft.x;
             int gridMaxX = gridMinX + grids[i].Width - 1;
@@ -78,6 +80,18 @@ public class GridManager : MonoBehaviour
         {
             startGameObjects.Add(go);
         }
+        foreach (GameObject go in grids[currentGrids.x]
+                     .GetObjectsInDirection(playerPosition, Direction.Up))
+        {
+            startGameObjects.Add(go);
+        }
+        foreach (GameObject go in grids[currentGrids.x]
+                     .GetObjectsInDirection(playerPosition + new Vector2Int(0, 1), Direction.Down))
+        {
+            startGameObjects.Add(go);
+        }
+        
+
 
         ShowObjects(startGameObjects, currentGrids.x);
 
@@ -180,6 +194,26 @@ public class GridManager : MonoBehaviour
 
                 break;
         }
+    }
+
+    public void MoveObject(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
+    {
+        StartCoroutine(MoveObjectCoroutine(obj, startPosition, endPosition));
+    }
+
+    public IEnumerator MoveObjectCoroutine(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
+    {
+        yield return null;
+        int startGridIndex = gridArray[startPosition.x - minX, startPosition.y - minY];
+        grids[startGridIndex].RemoveObject(obj, startPosition);
+        int endGridIndex = gridArray[endPosition.x - minX, endPosition.y - minY];
+        if (endGridIndex == -1)
+        {
+            grids[startGridIndex].AddObject(obj, endPosition);
+            gridArray[endPosition.x - minX, endPosition.y - minY] = startGridIndex;
+            yield break;
+        }
+        grids[endGridIndex].AddObject(obj, endPosition);
     }
     
     public List<GameObject> GetObjectsAtPosition(Vector2Int position)

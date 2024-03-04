@@ -28,12 +28,30 @@ public class PlayerMovement : MonoBehaviour
         gridManager = FindObjectOfType<GridManager>();
         playerController = new PlayerController();
         playerController.Player.Enable();
-        playerController.Player.Move.performed += ctx => Move(ctx.ReadValue<Vector2>());
-        playerController.Player.Rotate.performed += ctx => Rotate(ctx.ReadValue<float>());
+        playerController.Player.MoveHorizontal.performed += MoveHorizontal;
+        playerController.Player.MoveVertical.performed += MoveVertical;
+        playerController.Player.Rotate.performed += Rotate;
     }
-    
+
+    private void OnDestroy()
+    {
+        playerController.Player.Disable();
+        playerController.Player.MoveHorizontal.performed -= MoveHorizontal;
+        playerController.Player.MoveVertical.performed -= MoveVertical;
+        playerController.Player.Rotate.performed -= Rotate;
+    }
 
 
+    private void MoveHorizontal(InputAction.CallbackContext ctx)
+    {
+        float value = ctx.ReadValue<float>();
+        Move(new Vector2(value, 0));
+    }
+    private void MoveVertical(InputAction.CallbackContext ctx)
+    {
+        float value = ctx.ReadValue<float>();
+        Move(new Vector2(0, value));   
+    }
     private void Move(Vector2 movement)
     {
         if (moving)
@@ -56,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
             Tile tile = obj.GetComponent<Tile>();
             if (tile != null)
             {
-                if (!tile.TryWalkingOnTile(CurrentDirection))
+                if (!tile.TryWalkingOnTile(MovementDirection(movement)))
                 {
                     return;
                 }
@@ -83,6 +101,27 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(SmoothMovementCoroutine());
     }
 
+    private Direction MovementDirection(Vector2 movement)
+    {
+        if (movement.x > 0)
+        {
+            return Direction.Right;
+        }
+        if (movement.x < 0)
+        {
+            return Direction.Left;
+        }
+        if (movement.y > 0)
+        {
+            return Direction.Up;
+        }
+        if (movement.y < 0)
+        {
+            return Direction.Down;
+        }
+        return Direction.Right;
+    }
+
     private bool MovementBackward(Vector2 movement)
     {
         if (movement.x < 0 && CurrentDirection == Direction.Right)
@@ -105,8 +144,9 @@ public class PlayerMovement : MonoBehaviour
     }
     
     
-    private void Rotate(float rotation)
+    private void Rotate(InputAction.CallbackContext ctx)
     {
+        float rotation = ctx.ReadValue<float>();
         if (moving)
         {
             return;

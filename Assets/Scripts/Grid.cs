@@ -56,10 +56,7 @@ public class Grid : MonoBehaviour
         foreach (Transform child in transform)
         {
             Vector2Int gridPosition = new Vector2Int(Mathf.RoundToInt(child.position.x), Mathf.RoundToInt(child.position.y));
-            if (gridArray[gridPosition.x - minX, gridPosition.y - minY] == null)
-            {
-                gridArray[gridPosition.x - minX, gridPosition.y - minY] = new List<GameObject>();
-            }
+            gridArray[gridPosition.x - minX, gridPosition.y - minY] ??= new List<GameObject>();
             gridArray[gridPosition.x - minX, gridPosition.y - minY].Add(child.gameObject);
         }
     }
@@ -183,5 +180,25 @@ public class Grid : MonoBehaviour
                 break;
         }
         return objects;
+    }
+
+    public void RemoveObject(GameObject obj, Vector2Int worldPosition)
+    {
+        gridArray[worldPosition.x - BottomLeft.x, worldPosition.y - BottomLeft.y].Remove(obj);
+    }
+    
+    public void AddObject(GameObject obj, Vector2Int worldPosition)
+    {
+        if (worldPosition.x < BottomLeft.x || worldPosition.x >= Width + BottomLeft.x || worldPosition.y < BottomLeft.y || worldPosition.y >= Height + BottomLeft.y)
+        {
+            Destroy(obj);
+            Debug.Log("Object out of the grid. Destroying it.");
+            return;
+        }
+        if (gridArray[worldPosition.x - BottomLeft.x, worldPosition.y - BottomLeft.y] == null)
+        {
+            gridArray[worldPosition.x - BottomLeft.x, worldPosition.y - BottomLeft.y] = new List<GameObject>();
+        }
+        gridArray[worldPosition.x - BottomLeft.x, worldPosition.y - BottomLeft.y].Add(obj);
     }
 }
