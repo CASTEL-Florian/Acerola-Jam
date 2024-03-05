@@ -35,7 +35,9 @@ public class Fader : MonoBehaviour
     private IEnumerator FadeOutRoutine(float time)
     {
         fading = true;
-        image.color = Color.clear;
+        Color startColor = image.color;
+        startColor.a = 0;
+        image.color = startColor;
         while (image.color.a < 1)
         {
             Color imageColor = image.color;
@@ -49,7 +51,9 @@ public class Fader : MonoBehaviour
     private IEnumerator FadeInRoutine(float time)
     {
         fading = true;
-        image.color = Color.black;
+        Color startColor = image.color;
+        startColor.a = 1;
+        image.color = startColor;
         while (image.color.a > 0)
         {
             Color imageColor = image.color;

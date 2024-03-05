@@ -130,11 +130,7 @@ public class GridManager : MonoBehaviour
         Direction oldDirection1 = TurnDirection(playerDirection, oppositeTurn, 3);
         Direction oldDirection2 = TurnDirection(playerDirection, oppositeTurn, 4);
 
-        foreach (var grid in grids)
-        {
-            HideObjects(grid.GetObjectsInDirection(playerPosition, oldDirection1));
-            HideObjects(grid.GetObjectsInDirection(playerPosition, oldDirection2));
-        }
+        StartCoroutine(HideCoroutine(player.rotationDuration, playerPosition, playerPosition, oldDirection1, oldDirection2));
 
         if (turn == PlayerMovement.Turn.Left)
         {
@@ -158,6 +154,17 @@ public class GridManager : MonoBehaviour
             ShowObjects(grids[currentGrids.x].GetObjectsInDirection(playerPosition, newDirection2), currentGrids.x);
         }
     }
+
+    private IEnumerator HideCoroutine(float time, Vector2Int playerPosition1, Vector2Int playerPosition2, Direction oldDirection1, Direction oldDirection2)
+    {
+        yield return new WaitForSeconds(time);
+        foreach (var grid in grids)
+        {
+            HideObjects(grid.GetObjectsInDirection(playerPosition1, oldDirection1));
+            HideObjects(grid.GetObjectsInDirection(playerPosition2, oldDirection2));
+        }
+        
+    }
     
     private Direction TurnDirection(Direction direction, PlayerMovement.Turn turn, int turnCount = 1)
     {
@@ -177,20 +184,12 @@ public class GridManager : MonoBehaviour
         {
             case Direction.Up:
             case Direction.Down:
-                foreach (Grid grid in grids)
-                {
-                    HideObjects(grid.GetObjectsInDirection(oldPosition, Direction.Left));
-                    HideObjects(grid.GetObjectsInDirection(oldPosition + new Vector2Int(-1, 0), Direction.Right));
-                }
+                StartCoroutine(HideCoroutine(1 / player.speed, oldPosition,oldPosition + new Vector2Int(-1, 0), Direction.Left, Direction.Right));
 
                 break;
             case Direction.Left:
             case Direction.Right:
-                foreach (Grid grid in grids)
-                {
-                    HideObjects(grid.GetObjectsInDirection(oldPosition, Direction.Up));
-                    HideObjects(grid.GetObjectsInDirection(oldPosition + new Vector2Int(0, 1), Direction.Down));
-                }
+                StartCoroutine(HideCoroutine(1 / player.speed, oldPosition,oldPosition + new Vector2Int(0, 1), Direction.Up, Direction.Down));
 
                 break;
         }

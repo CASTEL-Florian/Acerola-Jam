@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     
     
     public float speed = 2.0f;
+    public float rotationDuration = 0.2f;
     private Vector2Int targetPosition;
     private bool moving;
     private PlayerController playerController;
@@ -31,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
         playerController.Player.MoveHorizontal.performed += MoveHorizontal;
         playerController.Player.MoveVertical.performed += MoveVertical;
         playerController.Player.Rotate.performed += Rotate;
+        GameManager.Instance.OnGameEnd += () => playerController.Player.Disable();
     }
 
     private void OnDestroy()
@@ -151,9 +153,11 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
+        moving = true;
         if (rotation > 0)
         {
-            transform.Rotate(0, 0, -90);
+            StartCoroutine(SmoothRotationCoroutine(-90));
             switch (CurrentDirection)
             {
                 case Direction.Up:
@@ -172,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            transform.Rotate(0, 0, 90);
+            StartCoroutine(SmoothRotationCoroutine(90));
             switch (CurrentDirection)
             {
                 case Direction.Up:
@@ -192,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
         OnTurn?.Invoke(rotation > 0 ? Turn.Right : Turn.Left);
     }
 
-    IEnumerator SmoothMovementCoroutine()
+    private IEnumerator SmoothMovementCoroutine()
     {
         Vector3 target = new Vector3(targetPosition.x, targetPosition.y, 0);
         float remainingDistance = (transform.position - target).sqrMagnitude;
@@ -205,6 +209,21 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
         transform.position = target;
+        moving = false;
+    }
+
+    private IEnumerator SmoothRotationCoroutine(float rotation)
+    {
+        float t = 0;
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + rotation);
+        while (t < 1)
+        {
+            t += Time.deltaTime / rotationDuration;
+            transform.rotation = Quaternion.Slerp(startRotation, endRotation, t);
+            yield return null;
+        }
+        transform.rotation = endRotation;
         moving = false;
     }
 }

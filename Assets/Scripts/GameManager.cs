@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     private bool loadingNextScene = false;
 
     private PlayerController playerController;
+    public event Action OnGameEnd;
     public static GameManager Instance { get; private set; }
     void Awake()
     {
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         if (loadingNextScene)
             return;
+        OnGameEnd?.Invoke();
         fader.TransitionToScene(nextSceneIndex);
         loadingNextScene = true;
     }
