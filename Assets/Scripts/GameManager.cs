@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Fader fader;
-    [SerializeField] private int nextSceneIndex;
+    [SerializeField] private float faderFadeOutTime = 1f;
     
     private bool loadingNextScene = false;
 
@@ -37,7 +37,13 @@ public class GameManager : MonoBehaviour
         if (loadingNextScene)
             return;
         OnGameEnd?.Invoke();
-        fader.TransitionToScene(nextSceneIndex);
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextSceneIndex >= SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0;
+        }
+
+        fader.TransitionToScene(nextSceneIndex, faderFadeOutTime);
         loadingNextScene = true;
     }
 
@@ -45,6 +51,7 @@ public class GameManager : MonoBehaviour
     {
         if (loadingNextScene)
             return;
+        OnGameEnd?.Invoke();
         fader.TransitionToScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

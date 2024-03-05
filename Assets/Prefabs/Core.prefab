@@ -10310,6 +10310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fader: {fileID: 2628168752918511717}
   nextSceneIndex: 0
+  faderFadeOutTime: 2
 --- !u!1 &8709879514896856286
 GameObject:
   m_ObjectHideFlags: 0

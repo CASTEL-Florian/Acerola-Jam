@@ -173,5 +173,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 2810602709085104486}
-  fadeInTime: 1
+  fadeInTime: 3
   fadeOutTime: 1
