@@ -90,8 +90,8 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        
         moving = true;
+        
         if (movement.x > 0 && CurrentDirection == Direction.Right)
         {
             OnFroward?.Invoke(currentPosition);
