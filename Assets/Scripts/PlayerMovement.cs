@@ -21,26 +21,34 @@ public class PlayerMovement : MonoBehaviour
     private GridManager gridManager;
     public event Action<Turn> OnTurn;
     public event Action<Vector2Int> OnFroward;
+    
+    public bool IsMoving => moving;
 
     public Direction CurrentDirection { get; private set; } = Direction.Right;
-    
+
+    private void Awake()
+    {
+        playerController = new PlayerController();
+    }
+
     void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
-        playerController = new PlayerController();
-        playerController.Player.Enable();
+        
         playerController.Player.MoveHorizontal.performed += MoveHorizontal;
         playerController.Player.MoveVertical.performed += MoveVertical;
         playerController.Player.Rotate.performed += Rotate;
         GameManager.Instance.OnGameEnd += () => playerController.Player.Disable();
     }
 
-    private void OnDestroy()
+    private void OnEnable()
+    {
+        playerController.Player.Enable();
+    }
+
+    private void OnDisable()
     {
         playerController.Player.Disable();
-        playerController.Player.MoveHorizontal.performed -= MoveHorizontal;
-        playerController.Player.MoveVertical.performed -= MoveVertical;
-        playerController.Player.Rotate.performed -= Rotate;
     }
 
 

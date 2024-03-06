@@ -246,6 +246,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d22b3e9d19eaae54a9cf22d3a93c3a9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3347863119577259225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8095812015361171887}
+  - component: {fileID: 5527377787613392026}
+  m_Layer: 0
+  m_Name: Map
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8095812015361171887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3347863119577259225}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1607530881944145205}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5527377787613392026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3347863119577259225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c9339fb86de8cb4895d52924f6d3025, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4129961341313394651
 GameObject:
   m_ObjectHideFlags: 0
@@ -10262,6 +10306,7 @@ Transform:
   - {fileID: 7250464319361682930}
   - {fileID: 4481927988389963562}
   - {fileID: 7858491604599557959}
+  - {fileID: 8095812015361171887}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8684720841603988262
@@ -10309,7 +10354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fader: {fileID: 2628168752918511717}
-  nextSceneIndex: 0
   faderFadeOutTime: 2
 --- !u!1 &8709879514896856286
 GameObject:

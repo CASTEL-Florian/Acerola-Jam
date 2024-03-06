@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     private PlayerController playerController;
     public event Action OnGameEnd;
+
+    public bool IsGameEnded;
     public static GameManager Instance { get; private set; }
     void Awake()
     {
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
         if (loadingNextScene)
             return;
         OnGameEnd?.Invoke();
+        IsGameEnded = true;
         int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         if (nextSceneIndex >= SceneManager.sceneCountInBuildSettings)
         {
@@ -52,6 +55,7 @@ public class GameManager : MonoBehaviour
         if (loadingNextScene)
             return;
         OnGameEnd?.Invoke();
+        IsGameEnded = true;
         fader.TransitionToScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

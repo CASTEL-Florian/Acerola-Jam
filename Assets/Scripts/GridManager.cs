@@ -19,6 +19,8 @@ public class GridManager : MonoBehaviour
     
     private int[,] gridArray;
     
+    public int GridCount => grids.Count;
+    
     
     private void Start()
     {
@@ -98,22 +100,29 @@ public class GridManager : MonoBehaviour
     }
 
 
-    private void ShowObjects(List<GameObject> objects, int gridIndex)
+    private void ShowObjects(List<GameObject> objects, int gridIndex = -1)
     {
         foreach (GameObject go in objects)
         {
             Vector3 position = go.transform.position;
-            gridArray[Mathf.RoundToInt(position.x) - minX, Mathf.RoundToInt(position.y) - minY] = gridIndex;
+            if (gridIndex != -1)
+            {
+                gridArray[Mathf.RoundToInt(position.x) - minX, Mathf.RoundToInt(position.y) - minY] = gridIndex;
+            }
             go.SetActive(true);
         }
     }
     
-    private void HideObjects(List<GameObject> objects)
+    private void HideObjects(List<GameObject> objects, bool removeFromGrid)
     {
         foreach (GameObject go in objects)
         {
             Vector3 position = go.transform.position;
-            gridArray[Mathf.RoundToInt(position.x) - minX, Mathf.RoundToInt(position.y) - minY] = -1;
+            if (removeFromGrid)
+            {
+                gridArray[Mathf.RoundToInt(position.x) - minX, Mathf.RoundToInt(position.y) - minY] = -1;
+            }
+
             go.SetActive(false);
         }
     }
@@ -130,7 +139,7 @@ public class GridManager : MonoBehaviour
         Direction oldDirection1 = TurnDirection(playerDirection, oppositeTurn, 3);
         Direction oldDirection2 = TurnDirection(playerDirection, oppositeTurn, 4);
 
-        StartCoroutine(HideCoroutine(player.rotationDuration, playerPosition, playerPosition, oldDirection1, oldDirection2));
+        StartCoroutine(HideCoroutine(playerPosition, playerPosition, oldDirection1, oldDirection2));
 
         if (turn == PlayerMovement.Turn.Left)
         {
@@ -155,13 +164,13 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private IEnumerator HideCoroutine(float time, Vector2Int playerPosition1, Vector2Int playerPosition2, Direction oldDirection1, Direction oldDirection2)
+    private IEnumerator HideCoroutine(Vector2Int playerPosition1, Vector2Int playerPosition2, Direction oldDirection1, Direction oldDirection2)
     {
-        yield return new WaitForSeconds(time);
+        yield return new WaitUntil(() => !player.IsMoving);
         foreach (var grid in grids)
         {
-            HideObjects(grid.GetObjectsInDirection(playerPosition1, oldDirection1));
-            HideObjects(grid.GetObjectsInDirection(playerPosition2, oldDirection2));
+            HideObjects(grid.GetObjectsInDirection(playerPosition1, oldDirection1), true);
+            HideObjects(grid.GetObjectsInDirection(playerPosition2, oldDirection2), true);
         }
         
     }
@@ -184,12 +193,12 @@ public class GridManager : MonoBehaviour
         {
             case Direction.Up:
             case Direction.Down:
-                StartCoroutine(HideCoroutine(1 / player.speed, oldPosition,oldPosition + new Vector2Int(-1, 0), Direction.Left, Direction.Right));
+                StartCoroutine(HideCoroutine(oldPosition,oldPosition + new Vector2Int(-1, 0), Direction.Left, Direction.Right));
 
                 break;
             case Direction.Left:
             case Direction.Right:
-                StartCoroutine(HideCoroutine(1 / player.speed, oldPosition,oldPosition + new Vector2Int(0, 1), Direction.Up, Direction.Down));
+                StartCoroutine(HideCoroutine(oldPosition,oldPosition + new Vector2Int(0, 1), Direction.Up, Direction.Down));
 
                 break;
         }
@@ -229,6 +238,31 @@ public class GridManager : MonoBehaviour
         }
         Vector2Int gridPosition = new Vector2Int(position.x - grids[gridIndex].BottomLeft.x, position.y - grids[gridIndex].BottomLeft.y);
         return grids[gridIndex].GetObjectsAtGridPosition(gridPosition);
+    }
+
+    public void ShowGrid(int index)
+    {
+        foreach (var grid in grids)
+        {
+            HideObjects(grid.GetObjectsInDirection(new Vector2Int(minX-1, minY-1), Direction.UpRight), false);
+        }
+        ShowObjects(grids[index].GetObjectsInDirection(new Vector2Int(minX-1, minY-1), Direction.UpRight), -1);
+    }
+
+    public void ResumeGrid()
+    {
+        foreach (var grid in grids)
+        {
+            HideObjects(grid.GetObjectsInDirection(new Vector2Int(minX - 1, minY - 1), Direction.UpRight), false);
+        }
+
+        for (int x = minX; x < minX + gridArray.GetLength(0); x++)
+        {
+            for (int y = minY; y < minY + gridArray.GetLength(1); y++)
+            {
+                ShowObjects(GetObjectsAtPosition(new Vector2Int(x, y)));
+            }
+        }
     }
 
 }

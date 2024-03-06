@@ -8,7 +8,7 @@ public class PushableTile : Tile
     private GridManager gridManager;
     private Vector2Int targetPosition;
     private float speed = 2.0f;
-    private void Start()
+    private void Awake()
     {
         gridManager = FindObjectOfType<GridManager>();
         speed = FindObjectOfType<PlayerMovement>().speed;
