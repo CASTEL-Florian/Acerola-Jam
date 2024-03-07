@@ -24,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
     
     public bool IsMoving => moving;
     
+    public bool CanMove => !moving && !waitFrame;
+    
     private bool waitFrame = false;
 
     public Direction CurrentDirection { get; private set; } = Direction.Right;

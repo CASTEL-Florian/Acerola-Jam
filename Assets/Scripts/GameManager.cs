@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     
 
     private PlayerController playerController;
+
+    private PlayerMovement player;
     public event Action OnGameEnd;
 
     public bool IsGameEnded { get; private set; }
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        player = FindObjectOfType<PlayerMovement>();
         fader.FadeIn();
         playerController = new PlayerController();
         playerController.Player.Enable();
@@ -69,6 +72,8 @@ public class GameManager : MonoBehaviour
     
     public void Undo()
     {
+        if (!player.CanMove || IsGameEnded)
+            return;
         undo.UndoLast();
     }
 }
