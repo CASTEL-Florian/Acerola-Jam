@@ -20,11 +20,14 @@ public class GridManager : MonoBehaviour
     public int[,] gridArray;
     
     public int GridCount => grids.Count;
+
+    private Compass compass;
     
     
     private void Awake()
     {
         player = FindObjectOfType<PlayerMovement>();
+        compass = FindObjectOfType<Compass>();
         player.OnTurn += UpdateWorldRotation;
         player.OnFroward += UpdateWorldForward;
         
@@ -172,7 +175,9 @@ public class GridManager : MonoBehaviour
             HideObjects(grid.GetObjectsInDirection(playerPosition1, oldDirection1), true);
             HideObjects(grid.GetObjectsInDirection(playerPosition2, oldDirection2), true);
         }
-        
+
+        compass.UpdateColors(gridIndices[(gridIndices.Count + currentGridIndex - 1) % gridIndices.Count], gridIndices[currentGridIndex],
+            gridIndices[(currentGridIndex + 1) % gridIndices.Count]);
     }
     
     private Direction TurnDirection(Direction direction, PlayerMovement.Turn turn, int turnCount = 1)
