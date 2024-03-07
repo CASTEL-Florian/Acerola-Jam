@@ -80,6 +80,15 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Undo"",
+                    ""type"": ""Button"",
+                    ""id"": ""12fe5de5-c97a-4391-ad91-a60ac9328304"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -291,6 +300,17 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
                     ""action"": ""Map"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be7c2220-cd54-49ee-8330-dd3f0ad003ba"",
+                    ""path"": ""<Keyboard>/#(U)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Undo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -305,6 +325,7 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
         m_Player_MoveVertical = m_Player.FindAction("MoveVertical", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
+        m_Player_Undo = m_Player.FindAction("Undo", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -372,6 +393,7 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_MoveVertical;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Map;
+    private readonly InputAction m_Player_Undo;
     public struct PlayerActions
     {
         private @PlayerController m_Wrapper;
@@ -382,6 +404,7 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
         public InputAction @MoveVertical => m_Wrapper.m_Player_MoveVertical;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Map => m_Wrapper.m_Player_Map;
+        public InputAction @Undo => m_Wrapper.m_Player_Undo;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -409,6 +432,9 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
             @Map.started += instance.OnMap;
             @Map.performed += instance.OnMap;
             @Map.canceled += instance.OnMap;
+            @Undo.started += instance.OnUndo;
+            @Undo.performed += instance.OnUndo;
+            @Undo.canceled += instance.OnUndo;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -431,6 +457,9 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
             @Map.started -= instance.OnMap;
             @Map.performed -= instance.OnMap;
             @Map.canceled -= instance.OnMap;
+            @Undo.started -= instance.OnUndo;
+            @Undo.performed -= instance.OnUndo;
+            @Undo.canceled -= instance.OnUndo;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -456,5 +485,6 @@ public partial class @PlayerController: IInputActionCollection2, IDisposable
         void OnMoveVertical(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnMap(InputAction.CallbackContext context);
+        void OnUndo(InputAction.CallbackContext context);
     }
 }

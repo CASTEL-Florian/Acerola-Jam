@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#pragma warning disable 0618
+
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;

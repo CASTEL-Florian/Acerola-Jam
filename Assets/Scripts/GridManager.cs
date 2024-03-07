@@ -10,19 +10,19 @@ public class GridManager : MonoBehaviour
     [SerializeField] private List<Grid> grids = new List<Grid>();
     [SerializeField] List<Vector2Int> gridIndices = new List<Vector2Int>();
     
-    private int currentGridIndex = 0;
+    [HideInInspector] public int currentGridIndex = 0;
     
     private int minX = Int32.MaxValue;
     private int maxX = -Int32.MaxValue;
     private int minY = Int32.MaxValue;
     private int maxY = -Int32.MaxValue;
     
-    private int[,] gridArray;
+    public int[,] gridArray;
     
     public int GridCount => grids.Count;
     
     
-    private void Start()
+    private void Awake()
     {
         player = FindObjectOfType<PlayerMovement>();
         player.OnTurn += UpdateWorldRotation;

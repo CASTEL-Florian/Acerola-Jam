@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     public event Action<Vector2Int> OnFroward;
     
     public bool IsMoving => moving;
+    
+    private bool waitFrame = false;
 
     public Direction CurrentDirection { get; private set; } = Direction.Right;
 
@@ -64,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Move(Vector2 movement)
     {
-        if (moving)
+        if (moving || waitFrame)
         {
             return;
         }
@@ -73,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+        GameManager.Instance.Record();
         
         Vector2Int currentPosition =
             new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
@@ -157,10 +160,11 @@ public class PlayerMovement : MonoBehaviour
     private void Rotate(InputAction.CallbackContext ctx)
     {
         float rotation = ctx.ReadValue<float>();
-        if (moving)
+        if (moving || waitFrame)
         {
             return;
         }
+        GameManager.Instance.Record();
 
         moving = true;
         if (rotation > 0)
@@ -217,7 +221,10 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
         transform.position = target;
+        waitFrame = true;
         moving = false;
+        yield return null;
+        waitFrame = false;
     }
 
     private IEnumerator SmoothRotationCoroutine(float rotation)
@@ -232,6 +239,30 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
         transform.rotation = endRotation;
+        waitFrame = true;
         moving = false;
+        yield return null;
+        waitFrame = false;
+    }
+
+    public void UpdateDirection()
+    {
+        Vector3 forward = transform.right;
+        if (forward.x > 0.5f)
+        {
+            CurrentDirection = Direction.Right;
+        }
+        else if (forward.x < -0.5f)
+        {
+            CurrentDirection = Direction.Left;
+        }
+        else if (forward.y > 0.5f)
+        {
+            CurrentDirection = Direction.Up;
+        }
+        else if (forward.y < -0.5f)
+        {
+            CurrentDirection = Direction.Down;
+        }
     }
 }

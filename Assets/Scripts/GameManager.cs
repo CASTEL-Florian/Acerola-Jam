@@ -8,13 +8,15 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Fader fader;
     [SerializeField] private float faderFadeOutTime = 1f;
+    [SerializeField] private Undo undo;
     
     private bool loadingNextScene = false;
+    
 
     private PlayerController playerController;
     public event Action OnGameEnd;
 
-    public bool IsGameEnded;
+    public bool IsGameEnded { get; private set; }
     public static GameManager Instance { get; private set; }
     void Awake()
     {
@@ -27,6 +29,7 @@ public class GameManager : MonoBehaviour
         playerController = new PlayerController();
         playerController.Player.Enable();
         playerController.Player.Restart.performed += _ => RestartScene();
+        playerController.Player.Undo.performed += _ => Undo();
     }
 
     private void OnDestroy()
@@ -57,5 +60,15 @@ public class GameManager : MonoBehaviour
         OnGameEnd?.Invoke();
         IsGameEnded = true;
         fader.TransitionToScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    
+    public void Record()
+    {
+        undo.Record();
+    }
+    
+    public void Undo()
+    {
+        undo.UndoLast();
     }
 }
