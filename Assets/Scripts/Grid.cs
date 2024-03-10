@@ -29,7 +29,6 @@ public class Grid : MonoBehaviour
         int maxX = -Int32.MaxValue;
         int minY = Int32.MaxValue;
         int maxY = -Int32.MaxValue;
-        Debug.Log("hiding game objects");
         foreach (Transform child in transform)
         {
             child.gameObject.SetActive(false);

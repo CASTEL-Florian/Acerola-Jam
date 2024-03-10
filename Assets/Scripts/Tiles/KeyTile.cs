@@ -5,22 +5,23 @@ public class KeyTile : PushableTile
 {
     [SerializeField] private int keyIndex;
     [SerializeField] private Color activatedColor;
-    
+    [SerializeField] private SpriteRenderer spriteRenderer;
     public int KeyIndex => keyIndex;
     private Color startColor;
 
-    private void Start()
+    protected override void Start()
     {
-        startColor = GetComponent<SpriteRenderer>().color;
+        base.Start();
+        startColor = spriteRenderer.color;
     }
 
     public void Activate()
     {
-        GetComponent<SpriteRenderer>().color = activatedColor;
+        spriteRenderer.color = activatedColor;
     }
     
     public void Deactivate()
     {
-        GetComponent<SpriteRenderer>().color = startColor;
+        spriteRenderer.color = startColor;
     }
 }

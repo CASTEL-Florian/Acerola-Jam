@@ -20,7 +20,7 @@ public class Undo : MonoBehaviour
     {
         gridManager = FindObjectOfType<GridManager>();
         player = FindObjectOfType<PlayerMovement>();
-        pushableTiles = FindObjectsOfType<PushableTile>();
+        pushableTiles = Resources.FindObjectsOfTypeAll<PushableTile>();
         pushablePositions = new Stack<Vector3>[pushableTiles.Length];
         for (int i = 0; i < pushableTiles.Length; i++)
         {

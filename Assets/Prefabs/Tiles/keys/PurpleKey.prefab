@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3873320055268305328, guid: c581db7fa933dc34e921a796178584e9, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3873320055268305328, guid: c581db7fa933dc34e921a796178584e9, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6392157
+      objectReference: {fileID: 0}
     - target: {fileID: 3936545034252669324, guid: c581db7fa933dc34e921a796178584e9, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -26,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 5758293133737623381, guid: c581db7fa933dc34e921a796178584e9, type: 3}
       propertyPath: m_Name
-      value: KeyTile Variant
+      value: PurpleKey
       objectReference: {fileID: 0}
     - target: {fileID: 8392772008202685483, guid: c581db7fa933dc34e921a796178584e9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38,7 +46,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8392772008202685483, guid: c581db7fa933dc34e921a796178584e9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.06940408
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8392772008202685483, guid: c581db7fa933dc34e921a796178584e9, type: 3}
       propertyPath: m_LocalRotation.w

@@ -70,10 +70,15 @@ public class GameManager : MonoBehaviour
         undo.Record();
     }
     
-    public void Undo()
+    private void Undo()
     {
         if (!player.CanMove || IsGameEnded)
             return;
         undo.UndoLast();
+    }
+
+    public void PauseGame()
+    {
+        
     }
 }

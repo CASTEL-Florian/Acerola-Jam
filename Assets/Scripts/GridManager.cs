@@ -176,6 +176,11 @@ public class GridManager : MonoBehaviour
             HideObjects(grid.GetObjectsInDirection(playerPosition2, oldDirection2), true);
         }
 
+        UpdateCompass();
+    }
+
+    public void UpdateCompass()
+    {
         compass.UpdateColors(gridIndices[(gridIndices.Count + currentGridIndex - 1) % gridIndices.Count], gridIndices[currentGridIndex],
             gridIndices[(currentGridIndex + 1) % gridIndices.Count]);
     }

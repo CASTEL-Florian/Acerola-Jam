@@ -13,6 +13,7 @@ public class Compass : MonoBehaviour
         public Image image2;
     }
     [SerializeField] private List<Color> gridColors;
+    [SerializeField] private List<Color> gridColorsDeactivated;
     [SerializeField] private List<Transform> thingsToRotate;
 
     [SerializeField] private Image up1;
@@ -49,6 +50,7 @@ public class Compass : MonoBehaviour
         directionToImages.Add(Direction.DownRight, new ImagePair {image1 = downRight, image2 = downRight});
         directionToImages.Add(Direction.DownLeft, new ImagePair {image1 = downLeft, image2 = downLeft});
         
+        FindObjectOfType<GridManager>().UpdateCompass();
     }
 
     private void Update()

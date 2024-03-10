@@ -8,10 +8,11 @@ public class PushableTile : Tile
     private GridManager gridManager;
     private Vector2Int targetPosition;
     private float speed = 2.0f;
-    private void Awake()
+    
+    protected virtual void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
-        speed = FindObjectOfType<PlayerMovement>().speed;
+        speed = Resources.FindObjectsOfTypeAll<PlayerMovement>()[0].speed;
     }
 
     public override bool TryWalkingOnTile(Direction direction)

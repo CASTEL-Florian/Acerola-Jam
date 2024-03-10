@@ -5,6 +5,7 @@ using UnityEngine;
 public class EndTile : Tile
 {
     [SerializeField] private SpriteRenderer enabledSprite;
+    [SerializeField] private SpriteRenderer enabledSpriteEdges;
     [SerializeField] private SpriteRenderer disabledSprite;
     private LockTile[] locks;
     private int LocksCount => locks.Length;
@@ -25,6 +26,7 @@ public class EndTile : Tile
         if (openedLocks < LocksCount)
         {
             enabledSprite.enabled = false;
+            enabledSpriteEdges.enabled = false;
             disabledSprite.enabled = true;
         }
     }
@@ -46,6 +48,7 @@ public class EndTile : Tile
         if (openedLocks == LocksCount)
         {
             enabledSprite.enabled = true;
+            enabledSpriteEdges.enabled = true;
             disabledSprite.enabled = false;
         }
     }
@@ -54,6 +57,7 @@ public class EndTile : Tile
     {
         openedLocks--;
         enabledSprite.enabled = false;
+        enabledSpriteEdges.enabled = false;
         disabledSprite.enabled = true;
     }
 }
