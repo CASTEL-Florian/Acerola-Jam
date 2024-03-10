@@ -6,14 +6,16 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Fader fader;
     [SerializeField] private RectTransform mainMenu;
     [SerializeField] private RectTransform levelSelectMenu;
+    [SerializeField] private RectTransform otherMenu;
+    [SerializeField] private RectTransform bonusLevelsMenu;
     [SerializeField] private AnimationCurve menuTransitionCurve;
     [SerializeField] private float menuTransitionTime = 1f;
-    [SerializeField] private RectTransform otherMenu;
     [SerializeField] private GameObject quitButton;
     
     private Vector3 initialMainMenuPosition;
     private Vector3 initialLevelSelectMenuPosition;
     private Vector3 initialOtherMenuPosition;
+    private Vector3 initialBonusLevelsMenuPosition;
 
     private bool isMoving;
 
@@ -27,6 +29,7 @@ public class MainMenu : MonoBehaviour
         initialMainMenuPosition = mainMenu.anchoredPosition;
         initialLevelSelectMenuPosition = levelSelectMenu.anchoredPosition;
         initialOtherMenuPosition = otherMenu.anchoredPosition;
+        initialBonusLevelsMenuPosition = bonusLevelsMenu.anchoredPosition;
     }
 
     public void StartLevel(int levelIndex)
@@ -36,7 +39,7 @@ public class MainMenu : MonoBehaviour
     
     public void ShowLevelSelectMenu()
     {
-        StartCoroutine(TransitionMenu(initialMainMenuPosition - initialLevelSelectMenuPosition));
+        StartCoroutine(TransitionMenu(initialMainMenuPosition - initialLevelSelectMenuPosition - (Vector3)mainMenu.anchoredPosition));
     }
     
     public void ShowMainMenu()
@@ -49,6 +52,11 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(TransitionMenu(initialMainMenuPosition - initialOtherMenuPosition));
     }
     
+    public void ShowBonusLevelsMenu()
+    {
+        StartCoroutine(TransitionMenu(initialLevelSelectMenuPosition - initialBonusLevelsMenuPosition));
+    }
+    
     private IEnumerator TransitionMenu(Vector3 movement)
     {
         if (isMoving)
@@ -58,16 +66,21 @@ public class MainMenu : MonoBehaviour
         Vector3 mainMenuPosition = mainMenu.anchoredPosition;
         Vector3 levelSelectMenuPosition = levelSelectMenu.anchoredPosition;
         Vector3 otherMenuPosition = otherMenu.anchoredPosition;
+        Vector3 bonusLevelsMenuPosition = bonusLevelsMenu.anchoredPosition;
         while (time < menuTransitionTime)
         {
             time += Time.deltaTime;
             mainMenu.anchoredPosition = Vector3.Lerp(Vector3.zero, movement, menuTransitionCurve.Evaluate(time)) + mainMenuPosition;
             levelSelectMenu.anchoredPosition = Vector3.Lerp(Vector3.zero, movement, menuTransitionCurve.Evaluate(time)) + levelSelectMenuPosition;
             otherMenu.anchoredPosition = Vector3.Lerp(Vector3.zero, movement, menuTransitionCurve.Evaluate(time)) + otherMenuPosition;
+            bonusLevelsMenu.anchoredPosition = Vector3.Lerp(Vector3.zero, movement, menuTransitionCurve.Evaluate(time)) + bonusLevelsMenuPosition;
+            
             yield return null;
         }
         mainMenu.anchoredPosition = movement + mainMenuPosition;
         levelSelectMenu.anchoredPosition = movement + levelSelectMenuPosition;
+        otherMenu.anchoredPosition = movement + otherMenuPosition;
+        bonusLevelsMenu.anchoredPosition = movement + bonusLevelsMenuPosition;
         isMoving = false;
     }
 

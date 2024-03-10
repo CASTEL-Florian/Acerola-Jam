@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Move(Vector2 movement)
     {
-        if (moving || waitFrame)
+        if (moving || waitFrame || GameManager.Instance.IsGamePaused)
         {
             return;
         }
@@ -162,7 +162,7 @@ public class PlayerMovement : MonoBehaviour
     private void Rotate(InputAction.CallbackContext ctx)
     {
         float rotation = ctx.ReadValue<float>();
-        if (moving || waitFrame)
+        if (moving || waitFrame || GameManager.Instance.IsGamePaused)
         {
             return;
         }

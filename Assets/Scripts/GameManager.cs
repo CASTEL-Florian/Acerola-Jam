@@ -9,9 +9,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Fader fader;
     [SerializeField] private float faderFadeOutTime = 1f;
     [SerializeField] private Undo undo;
+    [SerializeField] private GameObject pauseMenu;
     
     private bool loadingNextScene = false;
-    
+    public bool IsMapOpen { get; set; }
 
     private PlayerController playerController;
 
@@ -19,6 +20,8 @@ public class GameManager : MonoBehaviour
     public event Action OnGameEnd;
 
     public bool IsGameEnded { get; private set; }
+    
+    public bool IsGamePaused => pauseMenu.activeSelf;
     public static GameManager Instance { get; private set; }
     void Awake()
     {
@@ -33,6 +36,7 @@ public class GameManager : MonoBehaviour
         playerController.Player.Enable();
         playerController.Player.Restart.performed += _ => RestartScene();
         playerController.Player.Undo.performed += _ => Undo();
+        playerController.Player.Pause.performed += _ => TogglePauseMenu();
     }
 
     private void OnDestroy()
@@ -72,13 +76,21 @@ public class GameManager : MonoBehaviour
     
     private void Undo()
     {
-        if (!player.CanMove || IsGameEnded)
+        if (!player.CanMove || IsGameEnded || IsMapOpen || pauseMenu.activeSelf)
             return;
         undo.UndoLast();
     }
 
-    public void PauseGame()
+    public void TogglePauseMenu()
     {
-        
+        if (IsGameEnded)
+            return;
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+    }
+    
+    public void TransitionToMainMenu()
+    {
+        fader.TransitionToScene(0);
+        loadingNextScene = true;
     }
 }

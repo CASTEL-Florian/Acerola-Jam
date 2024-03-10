@@ -46,6 +46,7 @@ public class Map : MonoBehaviour
             playerIndicatorTransform.position = player.transform.position;
             gridManager.ShowGrid(mapActive);
             player.gameObject.SetActive(false);
+            GameManager.Instance.IsMapOpen = true;
         }
         else
         {
@@ -53,6 +54,7 @@ public class Map : MonoBehaviour
             playerIndicatorTransform.gameObject.SetActive(false);
             gridManager.ResumeGrid();
             player.gameObject.SetActive(true);
+            GameManager.Instance.IsMapOpen = false;
         }
     }
 }
