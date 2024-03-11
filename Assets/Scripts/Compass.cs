@@ -13,7 +13,7 @@ public class Compass : MonoBehaviour
         public Image image2;
     }
     [SerializeField] private List<Color> gridColors;
-    [SerializeField] private List<Color> gridColorsDeactivated;
+    [SerializeField] private List<Color> gridColorsPulse;
     [SerializeField] private List<Transform> thingsToRotate;
 
     [SerializeField] private Image up1;
@@ -50,7 +50,7 @@ public class Compass : MonoBehaviour
         directionToImages.Add(Direction.DownRight, new ImagePair {image1 = downRight, image2 = downRight});
         directionToImages.Add(Direction.DownLeft, new ImagePair {image1 = downLeft, image2 = downLeft});
         
-        FindObjectOfType<GridManager>().UpdateCompass();
+        FindObjectOfType<GridManager>().UpdateCompass(updateAll: true);
     }
 
     private void Update()
@@ -62,7 +62,7 @@ public class Compass : MonoBehaviour
         }
     }
 
-    public void UpdateColors(Vector2Int gridsBefore, Vector2Int currentGrids, Vector2Int gridsAfter)
+    public void UpdateColors(Vector2Int gridsBefore, Vector2Int currentGrids, Vector2Int gridsAfter, bool updateAll=false)
     {
         Direction direction = player.CurrentDirection;
 
@@ -80,16 +80,43 @@ public class Compass : MonoBehaviour
         directionToImages[directions[0]].image2.color = gridColors[gridsBefore.x];
         directionToImages[directions[1]].image1.color = gridColors[gridsBefore.x];
         directionToImages[directions[2]].image1.color = gridColors[gridsBefore.x];
-        directionToImages[directions[2]].image2.color = gridColors[gridsBefore.y];
-        directionToImages[directions[3]].image1.color = gridColors[currentGrids.x];
-        directionToImages[directions[4]].image1.color = gridColors[currentGrids.x];
-        directionToImages[directions[4]].image2.color = gridColors[currentGrids.y];
-        directionToImages[directions[5]].image1.color = gridColors[currentGrids.y];
-        directionToImages[directions[6]].image1.color = gridColors[gridsAfter.x];
+
+        if (updateAll)
+        {
+            directionToImages[directions[2]].image2.color = gridColors[gridsBefore.y];
+            directionToImages[directions[3]].image1.color = gridColors[currentGrids.x];
+            directionToImages[directions[4]].image1.color = gridColors[currentGrids.x];
+            directionToImages[directions[4]].image2.color = gridColors[currentGrids.y];
+            directionToImages[directions[5]].image1.color = gridColors[currentGrids.y];
+            directionToImages[directions[6]].image1.color = gridColors[gridsAfter.x];
+        }
+        
         directionToImages[directions[6]].image2.color = gridColors[gridsAfter.y];
         directionToImages[directions[7]].image1.color = gridColors[gridsAfter.y];
         directionToImages[directions[0]].image1.color = gridColors[gridsAfter.y];
 
+    }
+
+    public void PulseCurrentDirections(PlayerMovement.Turn turn, Vector2Int currentGrids)
+    {
+        Direction direction = player.CurrentDirection;
+
+        if (turn == PlayerMovement.Turn.Left)
+        {
+            Direction direction1 = TurnDirection(direction, PlayerMovement.Turn.Left, 1);
+            Direction direction2 = TurnDirection(direction, PlayerMovement.Turn.Left, 2);
+            StartCoroutine(PulseColor(directionToImages[direction].image2, gridColorsPulse[currentGrids.y], gridColors[currentGrids.y], 1));
+            StartCoroutine(PulseColor(directionToImages[direction1].image2, gridColorsPulse[currentGrids.y], gridColors[currentGrids.y], 1));
+            StartCoroutine(PulseColor(directionToImages[direction2].image1, gridColorsPulse[currentGrids.y], gridColors[currentGrids.y], 1));
+        }
+        else
+        {
+            Direction direction1 = TurnDirection(direction, PlayerMovement.Turn.Right, 1);
+            Direction direction2 = TurnDirection(direction, PlayerMovement.Turn.Right, 2);
+            StartCoroutine(PulseColor(directionToImages[direction].image1, gridColorsPulse[currentGrids.x], gridColors[currentGrids.x], 0.5f));
+            StartCoroutine(PulseColor(directionToImages[direction1].image1, gridColorsPulse[currentGrids.x], gridColors[currentGrids.x], 0.5f));
+            StartCoroutine(PulseColor(directionToImages[direction2].image2, gridColorsPulse[currentGrids.x], gridColors[currentGrids.x], 0.5f));
+        }
     }
     
     private Direction TurnDirection(Direction direction, PlayerMovement.Turn turn, int turnCount = 1)
@@ -102,5 +129,16 @@ public class Compass : MonoBehaviour
         }
         
         return (Direction)directionInt;
+    }
+    
+    private IEnumerator PulseColor(Image image, Color pulseColor, Color originalColor, float duration)
+    {
+        float t = 0;
+        while (t < 1)
+        {
+            t += Time.deltaTime / duration;
+            image.color = Color.Lerp(pulseColor, originalColor, t);
+            yield return null;
+        }
     }
 }

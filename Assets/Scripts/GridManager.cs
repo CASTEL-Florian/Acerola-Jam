@@ -152,6 +152,7 @@ public class GridManager : MonoBehaviour
         {
             currentGridIndex = currentGridIndex == 0 ? gridIndices.Count - 1 : currentGridIndex - 1;
         }
+        compass.PulseCurrentDirections(turn, gridIndices[currentGridIndex]);
         
         Vector2Int currentGrids = gridIndices[currentGridIndex];
         
@@ -179,10 +180,10 @@ public class GridManager : MonoBehaviour
         UpdateCompass();
     }
 
-    public void UpdateCompass()
+    public void UpdateCompass(bool updateAll = false)
     {
         compass.UpdateColors(gridIndices[(gridIndices.Count + currentGridIndex - 1) % gridIndices.Count], gridIndices[currentGridIndex],
-            gridIndices[(currentGridIndex + 1) % gridIndices.Count]);
+            gridIndices[(currentGridIndex + 1) % gridIndices.Count], updateAll);
     }
     
     private Direction TurnDirection(Direction direction, PlayerMovement.Turn turn, int turnCount = 1)
