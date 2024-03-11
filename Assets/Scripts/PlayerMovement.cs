@@ -11,8 +11,19 @@ public class PlayerMovement : MonoBehaviour
         Left,
         Right
     }
-    
-    
+
+    public enum MoveAction
+    {
+        None,
+        RotateLeft,
+        RotateRight,
+        MoveLeft,
+        MoveRight,
+        MoveUp,
+        MoveDown
+    }
+
+
     public float speed = 2.0f;
     public float rotationDuration = 0.2f;
     private Vector2Int targetPosition;
@@ -30,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
 
     public Direction CurrentDirection { get; private set; } = Direction.Right;
 
+    private MoveAction moveActionBuffer = MoveAction.None; 
+
     private void Awake()
     {
         playerController = new PlayerController();
@@ -41,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         
         playerController.Player.MoveHorizontal.performed += MoveHorizontal;
         playerController.Player.MoveVertical.performed += MoveVertical;
-        playerController.Player.Rotate.performed += Rotate;
+        playerController.Player.Rotate.performed += ctx => Rotate(ctx.ReadValue<float>());
         GameManager.Instance.OnGameEnd += () => playerController.Player.Disable();
     }
 
@@ -68,7 +81,30 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Move(Vector2 movement)
     {
-        if (moving || waitFrame || GameManager.Instance.IsGamePaused)
+        if (moving || waitFrame)
+        {
+            if (moveActionBuffer == MoveAction.None)
+            {
+                if (movement.x > 0)
+                {
+                    moveActionBuffer = MoveAction.MoveRight;
+                }
+                else if (movement.x < 0)
+                {
+                    moveActionBuffer = MoveAction.MoveLeft;
+                }
+                else if (movement.y > 0)
+                {
+                    moveActionBuffer = MoveAction.MoveUp;
+                }
+                else if (movement.y < 0)
+                {
+                    moveActionBuffer = MoveAction.MoveDown;
+                }
+            }
+            return;
+        }
+        if (GameManager.Instance.IsGamePaused)
         {
             return;
         }
@@ -159,10 +195,25 @@ public class PlayerMovement : MonoBehaviour
     }
     
     
-    private void Rotate(InputAction.CallbackContext ctx)
+    private void Rotate(float rotation)
     {
-        float rotation = ctx.ReadValue<float>();
-        if (moving || waitFrame || GameManager.Instance.IsGamePaused)
+        if (moving || waitFrame)
+        {
+            if (moveActionBuffer == MoveAction.None)
+            {
+                if (rotation > 0)
+                {
+                    moveActionBuffer = MoveAction.RotateRight;
+                }
+                else if (rotation < 0)
+                {
+                    moveActionBuffer = MoveAction.RotateLeft;
+                }
+            }
+            return;
+        }
+        
+        if (GameManager.Instance.IsGamePaused)
         {
             return;
         }
@@ -265,6 +316,35 @@ public class PlayerMovement : MonoBehaviour
         else if (forward.y < -0.5f)
         {
             CurrentDirection = Direction.Down;
+        }
+    }
+
+    private void Update()
+    {
+        if (moveActionBuffer != MoveAction.None && CanMove)
+        {
+            switch (moveActionBuffer)
+            {
+                case MoveAction.RotateLeft:
+                    Rotate(-1);
+                    break;
+                case MoveAction.RotateRight:
+                    Rotate(1);
+                    break;
+                case MoveAction.MoveUp:
+                    Move(new Vector2(0, 1));
+                    break;
+                case MoveAction.MoveDown:
+                    Move(new Vector2(0, -1));
+                    break;
+                case MoveAction.MoveLeft:
+                    Move(new Vector2(-1, 0));
+                    break;
+                case MoveAction.MoveRight:
+                    Move(new Vector2(1, 0));
+                    break;
+            }
+            moveActionBuffer = MoveAction.None;
         }
     }
 }
