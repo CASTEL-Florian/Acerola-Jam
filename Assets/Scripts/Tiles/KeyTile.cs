@@ -6,6 +6,7 @@ public class KeyTile : PushableTile
     [SerializeField] private int keyIndex;
     [SerializeField] private Color activatedColor;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private AudioSource audioSource;
     public int KeyIndex => keyIndex;
     private Color startColor;
 
@@ -18,6 +19,7 @@ public class KeyTile : PushableTile
     public void Activate()
     {
         spriteRenderer.color = activatedColor;
+        audioSource.Play();
     }
     
     public void Deactivate()
