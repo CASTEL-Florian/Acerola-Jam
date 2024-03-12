@@ -9,6 +9,10 @@ public class KeyTile : PushableTile
     [SerializeField] private AudioSource audioSource;
     public int KeyIndex => keyIndex;
     private Color startColor;
+    public bool IsActivated { get; private set; }
+    
+    
+    
 
     protected override void Start()
     {
@@ -16,14 +20,23 @@ public class KeyTile : PushableTile
         startColor = spriteRenderer.color;
     }
 
-    public void Activate()
+    public void Activate(bool silent = false)
     {
+        if (IsActivated)
+        {
+            return;
+        }
+        IsActivated = true;
         spriteRenderer.color = activatedColor;
-        audioSource.Play();
+        if (!silent)
+        {
+            audioSource.Play();
+        }
     }
     
     public void Deactivate()
     {
+        IsActivated = false;
         spriteRenderer.color = startColor;
     }
 }

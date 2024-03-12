@@ -12,7 +12,7 @@ public class PushableTile : Tile
     protected virtual void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
-        speed = Resources.FindObjectsOfTypeAll<PlayerMovement>()[0].speed;
+        speed = Utils.GetAllObjectsOnlyInScene<PlayerMovement>()[0].speed;
     }
 
     public override bool TryWalkingOnTile(Direction direction)
@@ -49,7 +49,7 @@ public class PushableTile : Tile
                 }
             }
         }
-        gridManager.MoveObject(gameObject, currentPosition, targetPosition);
+        gridManager.MoveObjectNextFrame(gameObject, currentPosition, targetPosition);
         StartCoroutine(SmoothMovementCoroutine());
         return true;
     }

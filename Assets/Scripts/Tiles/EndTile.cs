@@ -11,18 +11,15 @@ public class EndTile : Tile
     private int LocksCount => locks.Length;
     private int openedLocks = 0;
     
-    private void Awake()
+    private void Start()
     {
-        locks = FindObjectsOfType<LockTile>();
+        locks = Utils.GetAllObjectsOnlyInScene<LockTile>();
         foreach (LockTile lockTile in locks)
         {
             lockTile.OnLockOpened += OnLockOpened;
             lockTile.OnLockClosed += OnLockClosed;
         }
-    }
-
-    private void Start()
-    {
+        
         if (openedLocks < LocksCount)
         {
             enabledSprite.enabled = false;

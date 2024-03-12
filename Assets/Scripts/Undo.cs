@@ -16,16 +16,28 @@ public class Undo : MonoBehaviour
     private PushableTile[] pushableTiles;
     private Stack<Vector3>[] pushablePositions;
 
+    private KeyTile[] keyTiles;
+    private Stack<bool>[] keyStates;
+    
+    private LockTile[] lockTiles;
+
     private void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
         player = FindObjectOfType<PlayerMovement>();
-        pushableTiles = Resources.FindObjectsOfTypeAll<PushableTile>();
+        pushableTiles = Utils.GetAllObjectsOnlyInScene<PushableTile>();
         pushablePositions = new Stack<Vector3>[pushableTiles.Length];
         for (int i = 0; i < pushableTiles.Length; i++)
         {
             pushablePositions[i] = new Stack<Vector3>();
         }
+        keyTiles = Utils.GetAllObjectsOnlyInScene<KeyTile>();
+        keyStates = new Stack<bool>[keyTiles.Length];
+        for (int i = 0; i < keyTiles.Length; i++)
+        {
+            keyStates[i] = new Stack<bool>();
+        }
+        lockTiles = Utils.GetAllObjectsOnlyInScene<LockTile>();
         Record();
     }
 
@@ -49,6 +61,11 @@ public class Undo : MonoBehaviour
         }
         gridArrays.Push(gridArray);
         gridIndices.Push(gridManager.currentGridIndex);
+        
+        for (int i = 0; i < keyTiles.Length; i++)
+        {
+            keyStates[i].Push(keyTiles[i].IsActivated);
+        }
     }
     
     public void UndoLast()
@@ -72,7 +89,7 @@ public class Undo : MonoBehaviour
             {
                 Vector2Int currentPushablePositionInt = new Vector2Int(Mathf.RoundToInt(currentPushablePosition.x), Mathf.RoundToInt(currentPushablePosition.y));
                 Vector2Int newPushablePositionInt = new Vector2Int(Mathf.RoundToInt(newPushablePosition.x), Mathf.RoundToInt(newPushablePosition.y));
-                gridManager.MoveObject(pushableTiles[i].gameObject, currentPushablePositionInt, newPushablePositionInt);
+                gridManager.MoveObjectImmediate(pushableTiles[i].gameObject, currentPushablePositionInt, newPushablePositionInt);
             }
         }
         
@@ -86,5 +103,33 @@ public class Undo : MonoBehaviour
         }
         gridManager.currentGridIndex = gridIndices.Pop();
         gridManager.ResumeGrid();
+        
+        for (int i = 0; i < keyTiles.Length; i++)
+        {
+            bool isActivated = keyStates[i].Pop();
+            int keyIndex = keyTiles[i].KeyIndex;
+            foreach (LockTile lockTile in lockTiles)
+            {
+                if (lockTile.KeyIndex == keyIndex)
+                {
+                    if (isActivated)
+                    {
+                        lockTile.OpenLock();
+                    }
+                    else
+                    {
+                        lockTile.CloseLock();
+                    }
+                }
+            }
+            if (isActivated)
+            {
+                keyTiles[i].Activate(true);
+            }
+            else
+            {
+                keyTiles[i].Deactivate();
+            }
+        }
     }
 }

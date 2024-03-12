@@ -215,14 +215,25 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void MoveObject(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
+    public void MoveObjectNextFrame(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
     {
+        // Move the object at the next frame, otherwise the collection will be modified while iterating and foreach loops will throw an exception
         StartCoroutine(MoveObjectCoroutine(obj, startPosition, endPosition));
+    }
+    
+    public void MoveObjectImmediate(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
+    {
+        MoveObject(obj, startPosition, endPosition);
     }
 
     public IEnumerator MoveObjectCoroutine(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
     {
         yield return null;
+        MoveObject(obj, startPosition, endPosition);
+    }
+
+    private void MoveObject(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
+    {
         int startGridIndex = gridArray[startPosition.x - minX, startPosition.y - minY];
         grids[startGridIndex].RemoveObject(obj, startPosition);
         int endGridIndex = gridArray[endPosition.x - minX, endPosition.y - minY];
@@ -230,10 +241,12 @@ public class GridManager : MonoBehaviour
         {
             grids[startGridIndex].AddObject(obj, endPosition);
             gridArray[endPosition.x - minX, endPosition.y - minY] = startGridIndex;
-            yield break;
+            return;
         }
         grids[endGridIndex].AddObject(obj, endPosition);
     }
+    
+    
     
     public List<GameObject> GetObjectsAtPosition(Vector2Int position)
     {

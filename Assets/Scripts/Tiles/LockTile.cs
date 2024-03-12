@@ -6,6 +6,8 @@ public class LockTile : Tile
 {
     [SerializeField] private int keyIndex;
     
+    public int KeyIndex => keyIndex;
+    
     private GridManager gridManager;
     private PlayerMovement player;
     
@@ -34,6 +36,11 @@ public class LockTile : Tile
     {
         yield return null;
         yield return new WaitUntil(() => !player.IsMoving);
+        CheckForKey();
+    }
+
+    public void CheckForKey()
+    {
         List<GameObject> objects = gridManager.GetObjectsAtPosition(new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y)));
         foreach (GameObject obj in objects)
         {
@@ -46,7 +53,7 @@ public class LockTile : Tile
                     {
                         OpenLock();
                         keyTile.Activate();
-                        yield break;
+                        return;
                     }
                 }
             }
@@ -61,7 +68,7 @@ public class LockTile : Tile
         }
     }
     
-    private void OpenLock()
+    public void OpenLock()
     {
         Debug.Log("Lock opened");
         if (!isLocked)
@@ -72,7 +79,7 @@ public class LockTile : Tile
         OnLockOpened?.Invoke();
     }
     
-    private void CloseLock()
+    public void CloseLock()
     {
         Debug.Log("Lock closed");
         if (isLocked)

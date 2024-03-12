@@ -9,6 +9,8 @@ public class MusicPlayer : MonoBehaviour
     
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private float fadeInTime = 1f;
+    
+    Coroutine audioFadeCoroutine;
     void Awake()
     {
         if (Instance == null) { Instance = this; } else if (Instance != this) { Destroy(gameObject); }
@@ -17,6 +19,24 @@ public class MusicPlayer : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         audioMixer.SetFloat("MusicVolume", -80);
-        StartCoroutine(AudioFader.StartFade(audioMixer, "MusicVolume", fadeInTime, 1f));
+        audioFadeCoroutine = StartCoroutine(AudioFader.StartFade(audioMixer, "MusicVolume", fadeInTime, 1f));
+    }
+    
+    public void FadeOut(float fadeOutTime)
+    {
+        if (audioFadeCoroutine != null)
+        {
+            StopCoroutine(audioFadeCoroutine);
+        }
+        audioFadeCoroutine = StartCoroutine(AudioFader.StartFade(audioMixer, "MusicVolume", fadeOutTime, 0.0001f));
+    }
+    
+    public void FadeIn()
+    {
+        if (audioFadeCoroutine != null)
+        {
+            StopCoroutine(audioFadeCoroutine);
+        }
+        audioFadeCoroutine = StartCoroutine(AudioFader.StartFade(audioMixer, "MusicVolume", fadeInTime, 1f));
     }
 }

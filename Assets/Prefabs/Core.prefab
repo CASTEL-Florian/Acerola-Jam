@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8666667, g: 0.85882354, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1397,10 +1397,9 @@ GameObject:
   m_Component:
   - component: {fileID: 9000972660227573750}
   - component: {fileID: 5546195806060101089}
-  - component: {fileID: 7576374156385119042}
   - component: {fileID: 7463032931895555877}
   m_Layer: 0
-  m_Name: Compass Circle
+  m_Name: Compass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1448,36 +1447,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4012941439101309045}
   m_CullTransparentMesh: 1
---- !u!114 &7576374156385119042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4012941439101309045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.503293, g: 0.5206026, b: 0.7075472, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a1d4db54cf98bfb47a3f43812156dc8e, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &7463032931895555877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1491,9 +1460,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridColors:
-  - {r: 0.6431373, g: 0.72156864, b: 0.95294124, a: 1}
-  - {r: 0.9058824, g: 0.76470596, b: 0.60784316, a: 1}
-  - {r: 0.50980395, g: 0.65882355, b: 0.43137258, a: 1}
+  - {r: 0.5844609, g: 0.6557367, b: 0.866, a: 1}
+  - {r: 0.824, g: 0.6955844, b: 0.55290043, a: 1}
+  - {r: 0.47279763, g: 0.611, b: 0.40005952, a: 1}
   gridColorsPulse:
   - {r: 0.83467746, g: 0.87903225, b: 1, a: 1}
   - {r: 1, g: 0.9198312, b: 0.835443, a: 1}
@@ -13373,7 +13342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5291385, g: 0.64988583, b: 0.764151, a: 1}
+  m_Color: {r: 0.34901962, g: 0.4509804, b: 0.54901963, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -321,7 +321,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (moveActionBuffer != MoveAction.None && CanMove)
+        if (moveActionBuffer != MoveAction.None && CanMove && !GameManager.Instance.IsGameEnded)
         {
             switch (moveActionBuffer)
             {

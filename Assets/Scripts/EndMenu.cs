@@ -5,9 +5,6 @@ public class EndMenu : MonoBehaviour
 {
     [SerializeField] private Fader fader;
     [SerializeField] private GameObject quitButton;
-    
-
-    private bool isMoving;
 
     private void Start()
     {

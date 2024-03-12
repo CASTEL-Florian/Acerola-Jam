@@ -31,6 +31,12 @@ public class MainMenu : MonoBehaviour
         initialOtherMenuPosition = otherMenu.anchoredPosition;
         initialBonusLevelsMenuPosition = bonusLevelsMenu.anchoredPosition;
     }
+    
+    public void Play()
+    {
+        fader.TransitionToScene(1, 2);
+        MusicPlayer.Instance.FadeOut(3f);
+    }
 
     public void StartLevel(int levelIndex)
     {
