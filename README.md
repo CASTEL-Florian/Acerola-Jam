@@ -30,4 +30,4 @@ Input prompts: https://kenney.nl/assets/input-prompts
 
 Blur shader: https://github.com/tomc128/urp-kawase-blur 
 
-Fonts: Roboto Light, Whisper
+Fonts: Roboto, Whisper
