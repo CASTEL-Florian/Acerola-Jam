@@ -9,9 +9,13 @@ Reach the end by pushing objects and switching between two dimensions. Looking t
 ## Controls:
 
 WASD : Move
+
 A/D : Rotate
+
 R : Reset
+
 Z or Backspace : Undo
+
 Space : Look at the entire level
 
 ## How to play the game:
@@ -21,6 +25,9 @@ Download the game or play in your browser on the itch page : https://florian-cas
 ## External assets:
 
 Music by Eric Matyas: www.soundimage.org 
+
 Input prompts: https://kenney.nl/assets/input-prompts 
+
 Blur shader: https://github.com/tomc128/urp-kawase-blur 
+
 Fonts: Roboto Light, Whisper
