@@ -35,7 +35,7 @@ public class Map : MonoBehaviour
     
     private void ToggleMap()
     {
-        if (player.IsMoving || GameManager.Instance.IsGameEnded)
+        if (!player.CanMove || GameManager.Instance.IsGameEnded)
         {
             return;
         }
