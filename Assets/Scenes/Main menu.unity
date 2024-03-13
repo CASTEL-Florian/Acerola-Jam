@@ -14250,7 +14250,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bonus levels
+  m_text: Extra levels
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6c1255025a08faf4c92f9e3a3fe7e324, type: 2}
   m_sharedMaterial: {fileID: 2929434432771554258, guid: 6c1255025a08faf4c92f9e3a3fe7e324, type: 2}
@@ -14753,7 +14753,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bonus levels
+  m_text: Extra levels
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6c1255025a08faf4c92f9e3a3fe7e324, type: 2}
   m_sharedMaterial: {fileID: 2929434432771554258, guid: 6c1255025a08faf4c92f9e3a3fe7e324, type: 2}
