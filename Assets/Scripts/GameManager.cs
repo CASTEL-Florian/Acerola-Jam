@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
         playerController.Player.Undo.performed += _ => Undo();
         playerController.Player.Pause.performed += _ => TogglePauseMenu();
         levelText.text = SceneManager.GetActiveScene().name;
+        MusicPlayer.Instance.SceneLoaded();
     }
 
     private void OnDestroy()

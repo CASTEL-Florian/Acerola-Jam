@@ -13,6 +13,7 @@ public class EndMenu : MonoBehaviour
             quitButton.SetActive(false);
         }
         fader.FadeIn();
+        MusicPlayer.Instance.SceneLoaded();
     }
     
     public void TransitionToMainMenu()

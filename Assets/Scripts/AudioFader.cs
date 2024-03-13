@@ -6,6 +6,9 @@ public static class AudioFader
 {
     public static IEnumerator StartFade(AudioMixer audioMixer, string exposedParam, float duration, float targetVolume)
     {
+        // start after 1 frame in case the fade starts at the first frame after loading the scene and there is a lag spike.
+        yield return null; 
+        
         float currentTime = 0;
         audioMixer.GetFloat(exposedParam, out float currentVol);
         currentVol = Mathf.Pow(10, currentVol / 20);

@@ -13,6 +13,8 @@ public class MusicPlayer : MonoBehaviour
     
     Coroutine audioFadeCoroutine;
 
+    private bool prepareFadeIn = false;
+
     private bool extraLevels; // see note at the bottom
     void Awake()
     {
@@ -42,6 +44,20 @@ public class MusicPlayer : MonoBehaviour
             StopCoroutine(audioFadeCoroutine);
         }
         audioFadeCoroutine = StartCoroutine(AudioFader.StartFade(audioMixer, "MusicVolume", fadeInTime, 1f));
+    }
+
+    public void PrepareFadeInAtNextScene()
+    {
+        prepareFadeIn = true;
+    }
+
+    public void SceneLoaded()
+    {
+        if (prepareFadeIn)
+        {
+            FadeIn();
+            prepareFadeIn = false;
+        }
     }
 
     // This shouldn't be there. I should have a separate script for this. But since the Music player is not destroyed between scenes...

@@ -40,7 +40,6 @@ public class EndTransition : MonoBehaviour
             nextSceneIndex = 0;
         }
         fader.TransitionToScene(nextSceneIndex, 2);
-        yield return new WaitForSeconds(2);
-        MusicPlayer.Instance.FadeIn();
+        MusicPlayer.Instance.PrepareFadeInAtNextScene();
     }
 }

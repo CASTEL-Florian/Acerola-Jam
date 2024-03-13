@@ -45,10 +45,10 @@ public class LevelTransitionManager : MonoBehaviour
             nextSceneIndex = 0;
         }
         fader.TransitionToScene(nextSceneIndex, 2);
-        yield return new WaitForSeconds(2);
+
         if (fadeInAudioOnEnd)
         {
-            MusicPlayer.Instance.FadeIn();
+            MusicPlayer.Instance.PrepareFadeInAtNextScene();
         }
     }
     
