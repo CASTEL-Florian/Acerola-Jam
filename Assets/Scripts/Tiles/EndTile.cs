@@ -35,7 +35,7 @@ public class EndTile : Tile
             return true;
         }
         Debug.Log("GG you completed the level :p");
-        GameManager.Instance.LoadNextScene();
+        GameManager.Instance.Win();
         return true;
     }
     

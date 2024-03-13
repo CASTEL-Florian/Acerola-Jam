@@ -63,6 +63,12 @@ public class GameManager : MonoBehaviour
         loadingNextScene = true;
     }
 
+    public void Win()
+    {
+        PlayerPrefs.SetInt(SceneManager.GetActiveScene().buildIndex.ToString(), 1); // Save the level as completed
+        LoadNextScene();
+    }
+
     public void RestartScene()
     {
         if (loadingNextScene)
