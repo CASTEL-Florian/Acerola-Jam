@@ -17,5 +17,6 @@ public static class AudioFader
             audioMixer.SetFloat(exposedParam, Mathf.Log10(newVol) * 20);
             yield return null;
         }
+        audioMixer.SetFloat(exposedParam, Mathf.Log10(targetValue) * 20);
     }
 }
