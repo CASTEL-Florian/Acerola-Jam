@@ -81,6 +81,10 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Move(Vector2 movement)
     {
+        if (GameManager.Instance.IsGamePaused)
+        {
+            return;
+        }
         if (moving || waitFrame)
         {
             if (moveActionBuffer == MoveAction.None)
@@ -102,10 +106,6 @@ public class PlayerMovement : MonoBehaviour
                     moveActionBuffer = MoveAction.MoveDown;
                 }
             }
-            return;
-        }
-        if (GameManager.Instance.IsGamePaused)
-        {
             return;
         }
 
@@ -197,6 +197,10 @@ public class PlayerMovement : MonoBehaviour
     
     private void Rotate(float rotation)
     {
+        if (GameManager.Instance.IsGamePaused)
+        {
+            return;
+        }
         if (moving || waitFrame)
         {
             if (moveActionBuffer == MoveAction.None)
@@ -213,10 +217,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         
-        if (GameManager.Instance.IsGamePaused)
-        {
-            return;
-        }
         GameManager.Instance.Record();
 
         moving = true;
