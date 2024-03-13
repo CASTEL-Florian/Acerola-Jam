@@ -187,6 +187,7 @@ MonoBehaviour:
   activatedColor: {r: 0, g: 0, b: 0, a: 0}
   spriteRenderer: {fileID: 3936545034252669324}
   audioSource: {fileID: -3678312325278529151}
+  startColor: {r: 1, g: 1, b: 1, a: 0}
 --- !u!82 &-3678312325278529151
 AudioSource:
   m_ObjectHideFlags: 0

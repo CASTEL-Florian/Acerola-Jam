@@ -77,6 +77,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8851728625879922595, guid: c581db7fa933dc34e921a796178584e9, type: 3}
+      propertyPath: startColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8851728625879922595, guid: c581db7fa933dc34e921a796178584e9, type: 3}
+      propertyPath: startColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8851728625879922595, guid: c581db7fa933dc34e921a796178584e9, type: 3}
+      propertyPath: startColor.r
+      value: 0.6392157
+      objectReference: {fileID: 0}
+    - target: {fileID: 8851728625879922595, guid: c581db7fa933dc34e921a796178584e9, type: 3}
       propertyPath: activatedColor.a
       value: 1
       objectReference: {fileID: 0}
