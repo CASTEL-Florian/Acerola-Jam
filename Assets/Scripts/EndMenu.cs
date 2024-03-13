@@ -20,6 +20,12 @@ public class EndMenu : MonoBehaviour
         fader.TransitionToScene(0);
     }
     
+    public void TransitionToExtraLevels()
+    {
+        MusicPlayer.Instance.ExtraLevels();
+        fader.TransitionToScene(0);
+    }
+    
     public void Quit()
     {
         Application.Quit();

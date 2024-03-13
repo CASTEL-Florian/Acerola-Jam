@@ -30,6 +30,12 @@ public class MainMenu : MonoBehaviour
         initialLevelSelectMenuPosition = levelSelectMenu.anchoredPosition;
         initialOtherMenuPosition = otherMenu.anchoredPosition;
         initialBonusLevelsMenuPosition = bonusLevelsMenu.anchoredPosition;
+
+        bool extraLevels = MusicPlayer.Instance.CheckExtraLevels();
+        if (extraLevels)
+        {
+            ShowBonusLevelsMenu();
+        }
     }
     
     public void Play()
@@ -60,7 +66,7 @@ public class MainMenu : MonoBehaviour
     
     public void ShowBonusLevelsMenu()
     {
-        StartCoroutine(TransitionMenu(initialLevelSelectMenuPosition - initialBonusLevelsMenuPosition));
+        StartCoroutine(TransitionMenu(initialMainMenuPosition - initialBonusLevelsMenuPosition - (Vector3)mainMenu.anchoredPosition));
     }
     
     private IEnumerator TransitionMenu(Vector3 movement)

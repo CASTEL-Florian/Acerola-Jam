@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float faderFadeOutTime = 1f;
     [SerializeField] private Undo undo;
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private TextMeshProUGUI levelText;
     
     private bool loadingNextScene = false;
     public bool IsMapOpen { get; set; }
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
         playerController.Player.Restart.performed += _ => RestartScene();
         playerController.Player.Undo.performed += _ => Undo();
         playerController.Player.Pause.performed += _ => TogglePauseMenu();
+        levelText.text = SceneManager.GetActiveScene().name;
     }
 
     private void OnDestroy()
