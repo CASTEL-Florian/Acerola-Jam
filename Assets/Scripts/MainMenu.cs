@@ -61,7 +61,7 @@ public class MainMenu : MonoBehaviour
     
     public void ShowOtherMenu()
     {
-        StartCoroutine(TransitionMenu(initialMainMenuPosition - initialOtherMenuPosition));
+        StartCoroutine(TransitionMenu(initialMainMenuPosition - initialOtherMenuPosition - (Vector3)mainMenu.anchoredPosition));
     }
     
     public void ShowBonusLevelsMenu()
