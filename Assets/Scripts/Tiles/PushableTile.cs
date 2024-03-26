@@ -1,13 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PushableTile : Tile
 {
     private GridManager gridManager;
     private Vector2Int targetPosition;
     private float speed = 2.0f;
+    public Transform OtherTransformToUpdate { get; private set; }
     
     protected virtual void Start()
     {
@@ -15,7 +16,7 @@ public class PushableTile : Tile
         speed = Utils.GetAllObjectsOnlyInScene<PlayerMovement>()[0].speed;
     }
 
-    public override bool TryWalkingOnTile(Direction direction)
+    public override bool TryWalkingOnTile(Direction direction, bool isPlayer = false)
     {
         Vector2Int currentPosition =
             new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
@@ -56,6 +57,7 @@ public class PushableTile : Tile
     
     IEnumerator SmoothMovementCoroutine()
     {
+        yield return null; // Wait one frame for the undo record to be created
         Vector3 target = new Vector3(targetPosition.x, targetPosition.y, 0);
         float remainingDistance = (transform.position - target).sqrMagnitude;
 
@@ -67,5 +69,14 @@ public class PushableTile : Tile
             yield return null;
         }
         transform.position = target;
+        if (OtherTransformToUpdate != null)
+        {
+            OtherTransformToUpdate.position = target;
+        }
+    }
+    
+    public void RegisterOtherTransformToUpdate(Transform otherTransform)
+    {
+        OtherTransformToUpdate = otherTransform;
     }
 }

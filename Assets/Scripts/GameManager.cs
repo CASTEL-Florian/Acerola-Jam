@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Undo undo;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private string levelId;
     
     private bool loadingNextScene = false;
     public bool IsMapOpen { get; set; }
@@ -66,7 +67,7 @@ public class GameManager : MonoBehaviour
 
     public void Win()
     {
-        PlayerPrefs.SetInt(SceneManager.GetActiveScene().buildIndex.ToString(), 1); // Save the level as completed
+        PlayerPrefs.SetInt(levelId, 1); // Save the level as completed
         LoadNextScene();
     }
 

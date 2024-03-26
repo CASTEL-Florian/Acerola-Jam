@@ -76,4 +76,19 @@ public class LevelTransitionManager : MonoBehaviour
         }
         text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
     }
+    
+    public void SkipTransition()
+    {
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextSceneIndex >= SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0;
+        }
+        fader.TransitionToScene(nextSceneIndex, 2);
+
+        if (fadeInAudioOnEnd)
+        {
+            MusicPlayer.Instance.PrepareFadeInAtNextScene();
+        }
+    }
 }

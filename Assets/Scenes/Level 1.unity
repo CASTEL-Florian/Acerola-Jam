@@ -19402,6 +19402,10 @@ PrefabInstance:
       value: 8.000001
       objectReference: {fileID: 0}
     - target: {fileID: 1470435251269445031, guid: bd566e304d40d6b408cb72deb1cd49d7, type: 3}
+      propertyPath: levelId
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1470435251269445031, guid: bd566e304d40d6b408cb72deb1cd49d7, type: 3}
       propertyPath: nextSceneIndex
       value: 1
       objectReference: {fileID: 0}

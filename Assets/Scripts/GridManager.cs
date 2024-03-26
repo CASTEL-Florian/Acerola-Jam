@@ -95,11 +95,39 @@ public class GridManager : MonoBehaviour
         {
             startGameObjects.Add(go);
         }
-        
-
-
         ShowObjects(startGameObjects, currentGrids.x);
 
+        UpdateBehindObjects();
+
+    }
+
+    public void UpdateBehindObjects(bool hide = false)
+    {
+        if (hide) HideBehind(true);
+        Vector2Int gridsBefore = gridIndices[(gridIndices.Count + currentGridIndex - 1) % gridIndices.Count];
+        Vector2Int gridsAfter = gridIndices[(currentGridIndex + 1) % gridIndices.Count];
+        foreach (GameObject go in grids[gridsBefore.x]
+                     .GetAllObjects(true))
+        {
+            go.SetActive(true);
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            sr.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            if (gridsBefore.x == gridsAfter.y)
+            {
+                sr.maskInteraction = SpriteMaskInteraction.None;
+            }
+        }
+
+        if (gridsBefore.x != gridsAfter.y)
+        {
+            foreach (GameObject go in grids[gridsAfter.y]
+                         .GetAllObjects(true))
+            {
+                go.SetActive(true);
+                SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
+        }
     }
 
 
@@ -143,7 +171,8 @@ public class GridManager : MonoBehaviour
         Direction oldDirection2 = TurnDirection(playerDirection, oppositeTurn, 4);
 
         StartCoroutine(HideCoroutine(playerPosition, playerPosition, oldDirection1, oldDirection2));
-
+        HideBehind();
+        StartCoroutine(UpdateBehindGridCoroutine(turn, playerPosition));
         if (turn == PlayerMovement.Turn.Left)
         {
             currentGridIndex = currentGridIndex == gridIndices.Count - 1 ? 0 : currentGridIndex + 1;
@@ -165,6 +194,258 @@ public class GridManager : MonoBehaviour
         {
             ShowObjects(grids[currentGrids.x].GetObjectsInDirection(playerPosition, newDirection1), currentGrids.x);
             ShowObjects(grids[currentGrids.x].GetObjectsInDirection(playerPosition, newDirection2), currentGrids.x);
+        }
+
+    }
+
+    private void HideBehind(bool hideAll = false)
+    {
+        if (hideAll)
+        {
+            for (int i = 0; i < grids.Count; i++)
+            {
+                foreach (GameObject go in grids[i].GetAllObjects(true))
+                {
+                    go.SetActive(false);
+                }
+            }
+        }
+        Vector2Int gridsBefore = gridIndices[(gridIndices.Count + currentGridIndex - 1) % gridIndices.Count];
+        Vector2Int gridsAfter = gridIndices[(currentGridIndex + 1) % gridIndices.Count];
+
+        foreach (GameObject go in grids[gridsBefore.x]
+                     .GetAllObjects(true))
+        {
+            go.SetActive(false);
+        }
+        if (gridsBefore.x != gridsAfter.y)
+        {
+            foreach (GameObject go in grids[gridsAfter.y]
+                         .GetAllObjects(true))
+            {
+                go.SetActive(false);
+            }
+        }
+    }
+    
+    private IEnumerator UpdateBehindGridCoroutine(PlayerMovement.Turn turn, Vector2Int playerPosition)
+    {
+        Vector2Int gridsBeforeBefore = gridIndices[(gridIndices.Count + currentGridIndex - 2) % gridIndices.Count];
+        Vector2Int gridsBefore = gridIndices[(gridIndices.Count + currentGridIndex - 1) % gridIndices.Count];
+        Vector2Int gridsAfter = gridIndices[(currentGridIndex + 1) % gridIndices.Count];
+        Vector2Int gridsAfterAfter = gridIndices[(currentGridIndex + 2) % gridIndices.Count];
+        
+        int[] currentGridIndices = new int[]
+        {
+            gridsBeforeBefore.x,
+            gridsBefore.x,
+            gridsBefore.y,
+            
+            gridsAfter.x,
+            gridsAfter.y,
+            gridsAfterAfter.y,
+        };
+
+        int delta = turn == PlayerMovement.Turn.Left ? 1 : -1;
+        Func<int, int> getIndex = i => delta * i > 0 ? currentGridIndices[2 + delta * i] : currentGridIndices[3 + delta * i];
+        
+        Direction direction = player.CurrentDirection;
+        
+        
+        
+        foreach (GameObject go in grids[getIndex(-2)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 3), true))
+        {
+            go.SetActive(true);
+            if (turn == PlayerMovement.Turn.Left)
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            }
+            else
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
+            if (getIndex(-2) == getIndex(3))
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.None;
+            }
+        }
+
+        if (getIndex(-2) != getIndex(3))
+        {
+            foreach (GameObject go in grids[getIndex(3)]
+                         .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 3), true))
+            {
+                go.SetActive(true);
+                if (turn == PlayerMovement.Turn.Left)
+                {
+                    go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                }
+                else
+                {
+                    go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                }
+            }
+        }
+        foreach (GameObject go in grids[getIndex(2)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 2), true))
+        {
+            go.SetActive(true);
+            if (turn == PlayerMovement.Turn.Left)
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
+            else
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            }
+            if (getIndex(2) == getIndex(3))
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.None;
+            }
+        }
+        if (getIndex(2) != getIndex(3))
+        {
+            foreach (GameObject go in grids[getIndex(3)]
+                         .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 2), true))
+            {
+                go.SetActive(true);
+                if (turn == PlayerMovement.Turn.Left)
+                {
+                    go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                }
+                else
+                {
+                    go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                }
+            }
+        }
+        foreach (GameObject go in grids[getIndex(2)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 1), true))
+        {
+            go.SetActive(true);
+            if (turn == PlayerMovement.Turn.Left)
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
+            else
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            }
+        }
+        foreach (GameObject go in grids[getIndex(3)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 4), true))
+        {
+            go.SetActive(true);
+            if (turn == PlayerMovement.Turn.Left)
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
+            else
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            }
+            if (getIndex(-1) == getIndex(3))
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.None;
+            }
+        }
+
+        if (getIndex(-1) != getIndex(3))
+        {
+            foreach (GameObject go in grids[getIndex(-1)]
+                         .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 4), true))
+            {
+                go.SetActive(true);
+                if (turn == PlayerMovement.Turn.Left)
+                {
+                    go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                }
+                else
+                {
+                    go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                }
+            }
+        }
+        foreach (GameObject go in grids[getIndex(-1)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 5), true))
+        {
+            go.SetActive(true);
+            if (turn == PlayerMovement.Turn.Left)
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            }
+            else
+            {
+                go.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
+            
+        }
+        
+        
+        yield return new WaitUntil(() => !player.IsMoving);
+
+
+        foreach (GameObject go in grids[getIndex(-2)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 4), true))
+        {
+            go.SetActive(false);
+        }
+
+        foreach (GameObject go in grids[getIndex(2)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 1), true))
+        {
+            go.SetActive(false);
+        }
+        foreach (GameObject go in grids[getIndex(2)]
+                     .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 2), true))
+        {
+            go.SetActive(false);
+        }
+
+        if (getIndex(-2) != getIndex(3))
+        {
+            foreach (GameObject go in grids[getIndex(-2)]
+                         .GetObjectsInDirection(playerPosition, TurnDirection(direction, turn, 3), true))
+            {
+                go.SetActive(false);
+            }
+        }
+        foreach (GameObject go in grids[getIndex(-1)]
+                     .GetAllObjects(true))
+        {
+            go.SetActive(true);
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            if (turn == PlayerMovement.Turn.Left)
+            {
+                sr.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+            }
+            else
+            {
+                sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+            }
+            if (getIndex(3) == getIndex(-1))
+            {
+                sr.maskInteraction = SpriteMaskInteraction.None;
+            }
+        }
+
+        if (getIndex(3) != getIndex(-1))
+        {
+            foreach (GameObject go in grids[getIndex(3)]
+                         .GetAllObjects(true))
+            {
+                go.SetActive(true);
+                SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+                if (turn == PlayerMovement.Turn.Left)
+                {
+                    sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                }
+                else
+                {
+                    sr.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                }
+            }
         }
     }
 
@@ -234,16 +515,29 @@ public class GridManager : MonoBehaviour
 
     private void MoveObject(GameObject obj, Vector2Int startPosition, Vector2Int endPosition)
     {
+        PushableTile pushableTile = obj.GetComponent<PushableTile>();
         int startGridIndex = gridArray[startPosition.x - minX, startPosition.y - minY];
         grids[startGridIndex].RemoveObject(obj, startPosition);
+        if (pushableTile != null)
+        {
+            grids[startGridIndex].RemoveObject(pushableTile.OtherTransformToUpdate.gameObject, startPosition, true);
+        }
         int endGridIndex = gridArray[endPosition.x - minX, endPosition.y - minY];
         if (endGridIndex == -1)
         {
             grids[startGridIndex].AddObject(obj, endPosition);
+            if (pushableTile != null)
+            {
+                grids[startGridIndex].AddObject(pushableTile.OtherTransformToUpdate.gameObject, endPosition, true);
+            }
             gridArray[endPosition.x - minX, endPosition.y - minY] = startGridIndex;
             return;
         }
         grids[endGridIndex].AddObject(obj, endPosition);
+        if (pushableTile != null)
+        {
+            grids[endGridIndex].AddObject(pushableTile.OtherTransformToUpdate.gameObject, endPosition, true);
+        }
     }
     
     

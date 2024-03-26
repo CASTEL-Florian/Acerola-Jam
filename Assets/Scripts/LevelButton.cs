@@ -7,8 +7,10 @@ public class LevelButton : MonoBehaviour
 {
     [SerializeField] private int levelSceneIndex;
     [SerializeField] private Color completedColor;
-    [SerializeField] private Color completedSelectedColor;
+    [SerializeField] private Color completedHighlightedColor;
     [SerializeField] private Color completedPressedColor;
+    [SerializeField] private Color selectedColor;
+    [SerializeField] private string levelId; 
 
     private Button button;
 
@@ -21,16 +23,17 @@ public class LevelButton : MonoBehaviour
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(TransitionToLevel);
-        if (!PlayerPrefs.HasKey(levelSceneIndex.ToString()))
+        if (!PlayerPrefs.HasKey(levelId))
         {
             return;
         }
-        if (PlayerPrefs.GetInt(levelSceneIndex.ToString()) == 1)
+        if (PlayerPrefs.GetInt(levelId) == 1)
         {
             ColorBlock colorBlock = button.colors;
             colorBlock.normalColor = completedColor;
-            colorBlock.highlightedColor = completedSelectedColor;
+            colorBlock.highlightedColor = completedHighlightedColor;
             colorBlock.pressedColor = completedPressedColor;
+            colorBlock.selectedColor = selectedColor;
             button.colors = colorBlock;
         }
     }

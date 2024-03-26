@@ -19,14 +19,14 @@ public class LockTile : Tile
     private KeyTile[] keys;
     
     
-    private void Awake()
+    private void Start()
     {
-        player = FindObjectOfType<PlayerMovement>();
+        player = Utils.GetAllObjectsOnlyInScene<PlayerMovement>()[0];
         gridManager = FindObjectOfType<GridManager>();
-        keys = FindObjectsOfType<KeyTile>();
+        keys = Utils.GetAllObjectsOnlyInScene<KeyTile>();
     }
     
-    public override bool TryWalkingOnTile(Direction direction)
+    public override bool TryWalkingOnTile(Direction direction, bool isPlayer = false)
     {
         StartCoroutine(CheckForKeyCoroutine());
         return true;

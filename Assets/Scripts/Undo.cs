@@ -91,6 +91,11 @@ public class Undo : MonoBehaviour
                 Vector2Int newPushablePositionInt = new Vector2Int(Mathf.RoundToInt(newPushablePosition.x), Mathf.RoundToInt(newPushablePosition.y));
                 gridManager.MoveObjectImmediate(pushableTiles[i].gameObject, currentPushablePositionInt, newPushablePositionInt);
             }
+            Transform otherTransformToUpdate = pushableTiles[i].OtherTransformToUpdate;
+            if (otherTransformToUpdate != null)
+            {
+                otherTransformToUpdate.position = newPushablePosition;
+            }
         }
         
         short[,] gridArray = gridArrays.Pop();
@@ -103,6 +108,8 @@ public class Undo : MonoBehaviour
         }
         gridManager.currentGridIndex = gridIndices.Pop();
         gridManager.ResumeGrid();
+        gridManager.UpdateBehindObjects(true);
+        gridManager.UpdateCompass(true);
         
         for (int i = 0; i < keyTiles.Length; i++)
         {

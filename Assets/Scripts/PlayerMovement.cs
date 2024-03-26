@@ -26,6 +26,9 @@ public class PlayerMovement : MonoBehaviour
 
     public float speed = 2.0f;
     public float rotationDuration = 0.2f;
+    [SerializeField] private Transform rightMask;
+    [SerializeField] private Transform leftMask;
+    [SerializeField] private float pauseDuration = 0.1f;
     private Vector2Int targetPosition;
     private bool moving;
     private PlayerController playerController;
@@ -35,13 +38,15 @@ public class PlayerMovement : MonoBehaviour
     
     public bool IsMoving => moving;
     
-    public bool CanMove => !moving && !waitFrame;
+    public bool  CanMove => !moving && !paused;
     
-    private bool waitFrame = false;
+    private bool paused = false;
 
     public Direction CurrentDirection { get; private set; } = Direction.Right;
 
     private MoveAction moveActionBuffer = MoveAction.None; 
+    
+    private MoveAction latestMoveAction = MoveAction.None;
 
     private void Awake()
     {
@@ -73,11 +78,13 @@ public class PlayerMovement : MonoBehaviour
     {
         float value = ctx.ReadValue<float>();
         Move(new Vector2(value, 0));
+        latestMoveAction = value > 0 ? MoveAction.MoveRight : MoveAction.MoveLeft;
     }
     private void MoveVertical(InputAction.CallbackContext ctx)
     {
         float value = ctx.ReadValue<float>();
         Move(new Vector2(0, value));   
+        latestMoveAction = value > 0 ? MoveAction.MoveUp : MoveAction.MoveDown;
     }
     private void Move(Vector2 movement)
     {
@@ -85,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        if (moving || waitFrame)
+        if (moving || paused)
         {
             if (moveActionBuffer == MoveAction.None)
             {
@@ -113,7 +120,6 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        GameManager.Instance.Record();
         
         Vector2Int currentPosition =
             new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
@@ -125,12 +131,13 @@ public class PlayerMovement : MonoBehaviour
             Tile tile = obj.GetComponent<Tile>();
             if (tile != null)
             {
-                if (!tile.TryWalkingOnTile(MovementDirection(movement)))
+                if (!tile.TryWalkingOnTile(MovementDirection(movement), true))
                 {
                     return;
                 }
             }
         }
+        GameManager.Instance.Record();
         moving = true;
         
         if (movement.x > 0 && CurrentDirection == Direction.Right)
@@ -197,11 +204,12 @@ public class PlayerMovement : MonoBehaviour
     
     private void Rotate(float rotation)
     {
+        latestMoveAction = rotation > 0 ? MoveAction.RotateRight : MoveAction.RotateLeft;
         if (GameManager.Instance.IsGamePaused)
         {
             return;
         }
-        if (moving || waitFrame)
+        if (moving || paused)
         {
             if (moveActionBuffer == MoveAction.None)
             {
@@ -274,14 +282,16 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
         transform.position = target;
-        waitFrame = true;
+        paused = true;
         moving = false;
-        yield return null;
-        waitFrame = false;
+        yield return new WaitForSeconds(pauseDuration);
+        paused = false;
     }
+
 
     private IEnumerator SmoothRotationCoroutine(float rotation)
     {
+        
         float t = 0;
         Quaternion startRotation = transform.rotation;
         Quaternion endRotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + rotation);
@@ -292,10 +302,10 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
         transform.rotation = endRotation;
-        waitFrame = true;
+        paused = true;
         moving = false;
-        yield return null;
-        waitFrame = false;
+        yield return new WaitForSeconds(pauseDuration);
+        paused = false;
     }
 
     public void UpdateDirection()
@@ -321,7 +331,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (moveActionBuffer != MoveAction.None && CanMove && !GameManager.Instance.IsGameEnded)
+        if (GameManager.Instance.IsGameEnded || !CanMove)
+        {
+            return;
+        }
+        if (moveActionBuffer != MoveAction.None)
         {
             switch (moveActionBuffer)
             {
@@ -345,6 +359,21 @@ public class PlayerMovement : MonoBehaviour
                     break;
             }
             moveActionBuffer = MoveAction.None;
+        }
+        else if (playerController.Player.MoveHorizontal.ReadValue<float>() != 0 || playerController.Player.MoveVertical.ReadValue<float>() != 0 || playerController.Player.Rotate.ReadValue<float>() != 0)
+        {
+            if (latestMoveAction == MoveAction.MoveLeft || latestMoveAction == MoveAction.MoveRight)
+            {
+                Move(new Vector2(playerController.Player.MoveHorizontal.ReadValue<float>(), 0));
+            }
+            else if (latestMoveAction == MoveAction.MoveUp || latestMoveAction == MoveAction.MoveDown)
+            {
+                Move(new Vector2(0, playerController.Player.MoveVertical.ReadValue<float>()));
+            }
+            else if (latestMoveAction == MoveAction.RotateLeft || latestMoveAction == MoveAction.RotateRight)
+            {
+                Rotate(playerController.Player.Rotate.ReadValue<float>());
+            }
         }
     }
 }
