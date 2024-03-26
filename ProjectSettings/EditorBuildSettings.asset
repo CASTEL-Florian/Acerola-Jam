@@ -51,9 +51,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Level 10.unity
     guid: 3ec46e2896ea5b2409aaa324686c0547
   - enabled: 1
-    path: Assets/Scenes/Transition 10-11.unity
-    guid: 8b1c126755c853b4792b2c267fc00562
-  - enabled: 1
     path: Assets/Scenes/Level 11.unity
     guid: 4b0df50518b50234eaed746585f0890f
   - enabled: 1
@@ -62,6 +59,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level 13.unity
     guid: f22c37a91a63748439e61269f9ae28d4
+  - enabled: 1
+    path: Assets/Scenes/Transition 13-14.unity
+    guid: 8b1c126755c853b4792b2c267fc00562
   - enabled: 1
     path: Assets/Scenes/Level 14.unity
     guid: b9f315e62fd9ad143a58208cb878ea70
